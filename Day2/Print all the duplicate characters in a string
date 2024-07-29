@@ -1,0 +1,13 @@
+function printDuplicates(S) {
+    const frequency = {};
+
+    for (const char of S) {
+        frequency[char] = (frequency[char] || 0) + 1;
+    }
+
+    for (const [char, count] of Object.entries(frequency)) {
+        if (count > 1) {
+            console.log(`${char}, count = ${count}`);
+        }
+    }
+}
