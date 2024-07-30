@@ -1,0 +1,14 @@
+ std::sort(a, a + n);
+        
+        // Sort array b in descending order
+        std::sort(b, b + n, std::greater<long long>());
+        
+        // Check if A[i] + B[i] >= K for all i
+        for (int i = 0; i < n; ++i) {
+            if (a[i] + b[i] < k) {
+                return false; // If any pair does not satisfy the condition, return false
+            }
+        }
+        
+        return true; // All pairs satisfy the condition
+    }
