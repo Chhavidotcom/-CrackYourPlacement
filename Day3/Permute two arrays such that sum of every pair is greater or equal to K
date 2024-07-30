@@ -1,0 +1,12 @@
+function canPermuteSatisfyCondition(a, b, k) {
+    a.sort((x, y) => x - y);
+    b.sort((x, y) => y - x);
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] + b[i] < k) {
+            return "No";
+        }
+    }
+    
+    return "Yes";
+}
+console.log(canPermuteSatisfyCondition(a, b, k));
