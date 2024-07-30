@@ -1,0 +1,25 @@
+function findFloor(arr, x) {
+    let floor = -1; 
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] <= x) {
+            floor = arr[i];
+        } else {
+            break; 
+        }
+    }
+    return floor;
+}
+
+function findCeiling(arr, x) {
+    let ceiling = -1; 
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] >= x) {
+            ceiling = arr[i];
+            break; 
+        }
+    }
+    return ceiling;
+}
+
+console.log("Floor:", findFloor(sortedArray, x)); 
+console.log("Ceiling:", findCeiling(sortedArray, x)); 
