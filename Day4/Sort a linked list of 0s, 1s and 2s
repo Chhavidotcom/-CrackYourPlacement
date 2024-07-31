@@ -1,0 +1,55 @@
+class Node:
+    def __init__(self, value=0, next=None):
+        self.value = value
+        self.next = next
+
+def print_list(head):
+    current = head
+    while current:
+        print(current.value, end=' ')
+        current = current.next
+    print()
+
+def sort_linked_list(head):
+  
+    def swap_nodes(node1, node2):
+        node1.value, node2.value = node2.value, node1.value
+
+  
+    low = mid = head
+    high = head
+    
+   
+    while high and high.next:
+        high = high.next
+    
+   
+    if not high or not high.next:
+        return head
+
+    while mid and mid != high:
+        if mid.value == 0:
+            swap_nodes(low, mid)
+            low = low.next
+            mid = mid.next
+        elif mid.value == 1:
+            mid = mid.next
+        else:  # mid.value == 2
+            swap_nodes(mid, high)
+            high = high.prev  # Move high pointer backward
+            
+
+    return head
+
+
+def create_linked_list(values):
+    if not values:
+        return None
+    head = Node(values[0])
+    current = head
+    for value in values[1:]:
+        current.next = Node(value)
+        current = current.next
+    return head
+
+
