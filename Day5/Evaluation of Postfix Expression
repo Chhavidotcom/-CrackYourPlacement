@@ -1,0 +1,40 @@
+const stack = [];
+        const tokens = S.split('');
+        
+        for (const token of tokens) {
+            if (this.isOperator(token)) {
+                // It's an operator, pop two operands from the stack
+                const operand2 = stack.pop();
+                const operand1 = stack.pop();
+                const result = this.applyOperator(token, operand1, operand2);
+                stack.push(result);
+            } else {
+                // It's an operand, push it to the stack
+                stack.push(parseInt(token, 10));
+            }
+        }
+        
+        // The final result should be the only element in the stack
+        return stack.pop();
+    }
+
+    // Helper function to determine if the token is an operator
+    isOperator(token) {
+        return ['+', '-', '*', '/'].includes(token);
+    }
+
+    // Helper function to apply the operator to the operands
+    applyOperator(operator, operand1, operand2) {
+        switch (operator) {
+            case '+':
+                return operand1 + operand2;
+            case '-':
+                return operand1 - operand2;
+            case '*':
+                return operand1 * operand2;
+            case '/':
+                // Use Math.trunc for integer division to handle negative cases correctly
+                return Math.trunc(operand1 / operand2);
+            default:
+                throw new Error(`Unknown operator: ${operator}`);
+        }
