@@ -1,0 +1,21 @@
+let low = 0;      
+    let mid = 0;     
+    let high = nums.length - 1;  
+
+   
+    while (mid <= high) {
+        if (nums[mid] === 0) {
+            // Swap 0 to the front (low boundary)
+            [nums[low], nums[mid]] = [nums[mid], nums[low]];
+            low++;
+            mid++;
+        } else if (nums[mid] === 1) {
+            // 1 is in the correct place, just move forward
+            mid++;
+        } else {
+            // Swap 2 to the end (high boundary)
+            [nums[high], nums[mid]] = [nums[mid], nums[high]];
+            high--;
+            // Do not increment mid here, as the element swapped from high needs to be processed
+        }
+    }
