@@ -1,0 +1,30 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var subarraySum = function(nums, k) {
+    const prefixSumCount = new Map();
+    let currentPrefixSum = 0;
+    let count = 0;
+
+    
+    prefixSumCount.set(0, 1);
+
+    for (const num of nums) {
+        
+        currentPrefixSum += num;
+
+        if (prefixSumCount.has(currentPrefixSum - k)) {
+            count += prefixSumCount.get(currentPrefixSum - k);
+        }
+
+        if (prefixSumCount.has(currentPrefixSum)) {
+            prefixSumCount.set(currentPrefixSum, prefixSumCount.get(currentPrefixSum) + 1);
+        } else {
+            prefixSumCount.set(currentPrefixSum, 1);
+        }
+    }
+
+    return count;
+};
