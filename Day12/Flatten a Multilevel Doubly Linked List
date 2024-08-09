@@ -1,0 +1,47 @@
+/**
+ * // Definition for a _Node.
+ * function _Node(val,prev,next,child) {
+ *    this.val = val;
+ *    this.prev = prev;
+ *    this.next = next;
+ *    this.child = child;
+ * };
+ */
+
+/**
+ * @param {_Node} head
+ * @return {_Node}
+ */
+var flatten = function(head) {
+    if (!head) return null;
+    function flattenHelper(node) {
+        let curr = node;
+        let last = null;
+        
+        while (curr) {
+            if (curr.child) {
+                let childTail = flattenHelper(curr.child);
+                let next = curr.next;
+                curr.next = curr.child;
+                curr.child.prev = curr;
+                curr.child = null;
+                
+                if (childTail) {
+                    childTail.next = next;
+                    if (next) next.prev = childTail;
+                }
+                
+                last = childTail;
+            } else {
+                last = curr;
+            }
+            
+            curr = curr.next;
+        }
+        
+        return last;
+    }
+    
+    flattenHelper(head);
+    return head;
+};
