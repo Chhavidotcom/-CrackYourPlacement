@@ -1,0 +1,35 @@
+class Solution {
+    // Function to find the median of the BST
+    findMedian(root) {
+        let values = [];
+        
+        // Helper function for in-order traversal
+        function inOrderTraversal(node) {
+            if (node === null) {
+                return;
+            }
+            inOrderTraversal(node.left);
+            values.push(node.data);
+            inOrderTraversal(node.right);
+        }
+        
+        // Perform in-order traversal to get sorted values
+        inOrderTraversal(root);
+
+        let N = values.length;
+
+        if (N === 0) {
+            return 0; // Edge case: If the tree is empty
+        }
+
+        if (N % 2 === 1) {
+            // Odd number of nodes: median is the middle element
+            return values[Math.floor(N / 2)];
+        } else {
+            // Even number of nodes: median is the average of the two middle elements
+            let mid1 = N / 2 - 1;
+            let mid2 = N / 2;
+            return (values[mid1] + values[mid2]) / 2;
+        }
+    }
+}
