@@ -1,0 +1,24 @@
+const linkedListToNumberMod = (head, MOD) => {
+      let number = BigInt(0);
+      let factor = BigInt(1); // To handle place value
+
+      let current = head;
+      while (current !== null) {
+        number = (number * BigInt(10) + BigInt(current.data)) % MOD;
+        current = current.next;
+      }
+
+      return number;
+    };
+
+    const MOD = BigInt(10**9 + 7);
+
+    // Convert both linked lists to numbers modulo MOD
+    let num1 = linkedListToNumberMod(first, MOD);
+    let num2 = linkedListToNumberMod(second, MOD);
+
+    // Multiply the numbers and take modulo
+    let result = (num1 * num2) % MOD;
+
+    // Convert the result to a regular number for output
+    return Number(result);
