@@ -1,0 +1,33 @@
+class Solution {
+    // Function to count number of nodes in BST that lie in the given range.
+    getCount(root, low, high) {
+        // Helper function to recursively count nodes within range
+        function countNodesInRange(node, low, high) {
+            if (node === null) {
+                return 0;
+            }
+
+            let count = 0;
+
+            // If the node's value is within the range, count this node
+            if (node.data >= low && node.data <= high) {
+                count = 1;
+            }
+
+            // If node's value is greater than low, check left subtree
+            if (node.data > low) {
+                count += countNodesInRange(node.left, low, high);
+            }
+
+            // If node's value is less than high, check right subtree
+            if (node.data < high) {
+                count += countNodesInRange(node.right, low, high);
+            }
+
+            return count;
+        }
+
+        // Start counting from the root
+        return countNodesInRange(root, low, high);
+    }
+}
