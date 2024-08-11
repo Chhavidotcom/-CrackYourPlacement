@@ -1,0 +1,33 @@
+Integer[] nums = arr.toArray(new Integer[0]);
+        Arrays.sort(nums); // Sort the array to handle duplicates
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), nums, new boolean[n]);
+        return result;
+    }
+
+    private static void backtrack(ArrayList<ArrayList<Integer>> result, ArrayList<Integer> current, Integer[] nums, boolean[] used) {
+        // If the current permutation is complete
+        if (current.size() == nums.length) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            // Skip used elements and duplicates
+            if (used[i] || (i > 0 && nums[i].equals(nums[i - 1]) && !used[i - 1])) {
+                continue;
+            }
+
+            // Choose the current number
+            used[i] = true;
+            current.add(nums[i]);
+
+            // Recurse
+            backtrack(result, current, nums, used);
+
+            // Backtrack
+            current.remove(current.size() - 1);
+            used[i] = false;
+        }
+    }
+}
