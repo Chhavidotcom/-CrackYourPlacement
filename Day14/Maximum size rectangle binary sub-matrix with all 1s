@@ -1,0 +1,49 @@
+class Solution {
+    static maximalRectangle(matrix) {
+        if (!matrix || matrix.length === 0) return 0;
+        const m = matrix.length;
+        const n = matrix[0].length;
+
+        // Array to store heights of histograms
+        let heights = new Array(n).fill(0);
+        let maxArea = 0;
+
+        for (let i = 0; i < m; i++) {
+            // Update histogram heights based on the current row
+            for (let j = 0; j < n; j++) {
+                heights[j] = matrix[i][j] === '1' ? heights[j] + 1 : 0;
+            }
+            // Calculate max area in the histogram
+            maxArea = Math.max(maxArea, this.largestRectangleArea(heights));
+        }
+
+        return maxArea;
+    }
+
+    // Function to calculate the largest rectangle area in a histogram
+    static largestRectangleArea(heights) {
+        const stack = [];
+        let maxArea = 0;
+        let index = 0;
+
+        while (index < heights.length) {
+            if (stack.length === 0 || heights[index] >= heights[stack[stack.length - 1]]) {
+                stack.push(index++);
+            } else {
+                const top = stack.pop();
+                const height = heights[top];
+                const width = stack.length === 0 ? index : index - stack[stack.length - 1] - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+        }
+
+        while (stack.length > 0) {
+            const top = stack.pop();
+            const height = heights[top];
+            const width = stack.length === 0 ? index : index - stack[stack.length - 1] - 1;
+            maxArea = Math.max(maxArea, height * width);
+        }
+
+        return maxArea;
+    }
+}
