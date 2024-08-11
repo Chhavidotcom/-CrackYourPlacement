@@ -1,0 +1,60 @@
+function search(P, T) {
+    const d = 256; // Number of characters in the input alphabet (ASCII)
+    const q = 101; // A prime number for hashing
+
+    const m = P.length;
+    const n = T.length;
+    
+    if (n < m) {
+        return; // Pattern longer than text, no matches possible
+    }
+
+    let i, j;
+    let pHash = 0; // Hash value for pattern
+    let tHash = 0; // Hash value for current window in text
+    let h = 1;
+
+    // Compute h = d^(m-1) % q
+    for (i = 0; i < m - 1; i++) {
+        h = (h * d) % q;
+    }
+
+    // Compute the hash value of pattern and first window of text
+    for (i = 0; i < m; i++) {
+        pHash = (d * pHash + P.charCodeAt(i)) % q;
+        tHash = (d * tHash + T.charCodeAt(i)) % q;
+    }
+
+    // Slide the pattern over the text
+    for (i = 0; i <= n - m; i++) {
+        // Check the hash values of current window of text and pattern
+        if (pHash === tHash) {
+            // Check for the actual pattern match
+            let match = true;
+            for (j = 0; j < m; j++) {
+                if (T[i + j] !== P[j]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                console.log(`Pattern found at index ${i}`);
+            }
+        }
+
+        // Calculate hash value for next window of text
+        if (i < n - m) {
+            tHash = (d * (tHash - T.charCodeAt(i) * h) + T.charCodeAt(i + m)) % q;
+
+            // We might get a negative value of tHash, convert it to positive
+            if (tHash < 0) {
+                tHash += q;
+            }
+        }
+    }
+}
+
+// Example usage:
+const text = "ABCCDDAEFG";
+const pattern = "CDD";
+search(pattern, text);
