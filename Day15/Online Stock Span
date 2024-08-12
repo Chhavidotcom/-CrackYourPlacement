@@ -1,0 +1,30 @@
+
+var StockSpanner = function() {
+    this.stack = [];
+};
+
+/** 
+ * @param {number} price
+ * @return {number}
+ */
+StockSpanner.prototype.next = function(price) {
+    let span = 1;
+
+    // While there are elements in the stack and the top of the stack's price
+    // is less than or equal to the current price, pop the stack
+    while (this.stack.length > 0 && this.stack[this.stack.length - 1][0] <= price) {
+        span += this.stack.pop()[1];
+    }
+    
+    // Push the current price and its span onto the stack
+    this.stack.push([price, span]);
+    
+    // Return the calculated span
+    return span;
+};
+
+/** 
+ * Your StockSpanner object will be instantiated and called as such:
+ * var obj = new StockSpanner()
+ * var param_1 = obj.next(price)
+ */
