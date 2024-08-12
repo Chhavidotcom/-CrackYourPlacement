@@ -1,0 +1,88 @@
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function(lists) {
+
+    if (lists.length === 0) return null;
+    
+    // Min-heap / Priority Queue implementation using a binary heap
+    let MinHeap = function() {
+        this.heap = [];
+        this.push = function(node) {
+            this.heap.push(node);
+            this.bubbleUp(this.heap.length - 1);
+        };
+        this.pop = function() {
+            if (this.heap.length === 0) return null;
+            let root = this.heap[0];
+            let end = this.heap.pop();
+            if (this.heap.length > 0) {
+                this.heap[0] = end;
+                this.bubbleDown(0);
+            }
+            return root;
+        };
+        this.bubbleUp = function(index) {
+            let parentIndex = Math.floor((index - 1) / 2);
+            while (index > 0 && this.heap[index].val < this.heap[parentIndex].val) {
+                [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+                index = parentIndex;
+                parentIndex = Math.floor((index - 1) / 2);
+            }
+        };
+        this.bubbleDown = function(index) {
+            let length = this.heap.length;
+            let leftChild = 2 * index + 1;
+            let rightChild = 2 * index + 2;
+            let smallest = index;
+            
+            if (leftChild < length && this.heap[leftChild].val < this.heap[smallest].val) {
+                smallest = leftChild;
+            }
+            if (rightChild < length && this.heap[rightChild].val < this.heap[smallest].val) {
+                smallest = rightChild;
+            }
+            if (smallest !== index) {
+                [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+                this.bubbleDown(smallest);
+            }
+        };
+        this.size = function() {
+            return this.heap.length;
+        };
+    };
+
+    let minHeap = new MinHeap();
+    
+    // Initialize the heap with the head of each list
+    for (let i = 0; i < lists.length; i++) {
+        if (lists[i]) {
+            minHeap.push(lists[i]);
+        }
+    }
+    
+    let dummy = new ListNode(0);
+    let current = dummy;
+    
+    // Merge the lists
+    while (minHeap.size() > 0) {
+        let node = minHeap.pop();
+        current.next = node;
+        current = current.next;
+        
+        if (node.next) {
+            minHeap.push(node.next);
+        }
+    }
+    
+    return dummy.next;
+
+};
