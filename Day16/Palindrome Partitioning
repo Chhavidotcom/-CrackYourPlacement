@@ -1,0 +1,47 @@
+/**
+ * @param {string} s
+ * @return {string[][]}
+ */
+var partition = function(s) {
+    const result = [];
+
+    // Helper function to check if a substring is a palindrome
+    const isPalindrome = (str) => {
+        let left = 0;
+        let right = str.length - 1;
+        while (left < right) {
+            if (str[left] !== str[right]) return false;
+            left++;
+            right--;
+        }
+        return true;
+    };
+
+    // Backtracking function
+    const backtrack = (start, path) => {
+        // If we have reached the end of the string, add the current path to result
+        if (start === s.length) {
+            result.push([...path]);
+            return;
+        }
+
+        // Explore all possible substrings starting from index 'start'
+        for (let end = start + 1; end <= s.length; end++) {
+            const substring = s.slice(start, end);
+            // Check if the substring is a palindrome
+            if (isPalindrome(substring)) {
+                // Add the substring to the current path
+                path.push(substring);
+                // Recur for the next part of the string
+                backtrack(end, path);
+                // Backtrack by removing the last added substring
+                path.pop();
+            }
+        }
+    };
+
+    // Start backtracking from index 0 with an empty path
+    backtrack(0, []);
+
+    return result;
+};
