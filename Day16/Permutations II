@@ -1,0 +1,35 @@
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var permuteUnique = function(nums) {
+    const result = [];
+    nums.sort((a, b) => a - b); // Sort to handle duplicates
+
+    const backtrack = (path, visited) => {
+        // Base case: if the path length equals the nums length, add to result
+        if (path.length === nums.length) {
+            result.push([...path]);
+            return;
+        }
+
+        for (let i = 0; i < nums.length; i++) {
+            // Skip duplicates and already visited elements
+            if (visited[i] || (i > 0 && nums[i] === nums[i - 1] && !visited[i - 1])) {
+                continue;
+            }
+
+            // Choose the number and mark it as visited
+            visited[i] = true;
+            path.push(nums[i]);
+            // Recur with the updated path and visited status
+            backtrack(path, visited);
+            // Backtrack: remove the number and mark it as unvisited
+            path.pop();
+            visited[i] = false;
+        }
+    };
+
+    backtrack([], new Array(nums.length).fill(false));
+    return result;
+};
