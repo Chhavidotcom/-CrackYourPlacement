@@ -1,0 +1,27 @@
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number[][]}
+ */
+var combine = function(n, k) {
+     const result = [];
+    
+    const backtrack = (start, path) => {
+        // If the path length is k, push the combination to the result
+        if (path.length === k) {
+            result.push([...path]);
+            return;
+        }
+        
+        // Explore further numbers starting from 'start'
+        for (let i = start; i <= n; i++) {
+            path.push(i); // Choose the current number
+            backtrack(i + 1, path); // Explore further with the chosen number
+            path.pop(); // Backtrack to explore other combinations
+        }
+    };
+    
+    backtrack(1, []); // Start with the first number and an empty path
+    
+    return result;
+};
