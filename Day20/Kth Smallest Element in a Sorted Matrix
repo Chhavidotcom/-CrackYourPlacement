@@ -1,0 +1,90 @@
+/**
+ * @param {number[][]} matrix
+ * @param {number} k
+ * @return {number}
+ */
+var kthSmallest = function(matrix, k) {
+   const n = matrix.length;
+    const minHeap = new MinHeap();
+    const visited = new Set();
+    
+    // Initialize the heap with the top-left element
+    minHeap.push([matrix[0][0], 0, 0]);
+    visited.add('0,0');
+    
+    let result = 0;
+    
+    // Process k elements
+    for (let i = 0; i < k; i++) {
+        const [value, row, col] = minHeap.pop();
+        result = value;
+        
+        // Push the right neighbor
+        if (col + 1 < n && !visited.has(`${row},${col + 1}`)) {
+            minHeap.push([matrix[row][col + 1], row, col + 1]);
+            visited.add(`${row},${col + 1}`);
+        }
+        
+        // Push the down neighbor
+        if (row + 1 < n && !visited.has(`${row + 1},${col}`)) {
+            minHeap.push([matrix[row + 1][col], row + 1, col]);
+            visited.add(`${row + 1},${col}`);
+        }
+    }
+    
+    return result;
+};
+
+// MinHeap class to support heap operations
+class MinHeap {
+    constructor() {
+        this.heap = [];
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    push(value) {
+        this.heap.push(value);
+        this._heapifyUp(this.size() - 1);
+    }
+
+    pop() {
+        if (this.size() === 0) return null;
+        const min = this.heap[0];
+        const last = this.heap.pop();
+        if (this.size() > 0) {
+            this.heap[0] = last;
+            this._heapifyDown(0);
+        }
+        return min;
+    }
+
+    _heapifyUp(index) {
+        const parentIndex = Math.floor((index - 1) / 2);
+        if (index > 0 && this.heap[index][0] < this.heap[parentIndex][0]) {
+            [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+            this._heapifyUp(parentIndex);
+        }
+    }
+
+    _heapifyDown(index) {
+        const size = this.size();
+        const leftChildIndex = 2 * index + 1;
+        const rightChildIndex = 2 * index + 2;
+        let smallest = index;
+
+        if (leftChildIndex < size && this.heap[leftChildIndex][0] < this.heap[smallest][0]) {
+            smallest = leftChildIndex;
+        }
+        if (rightChildIndex < size && this.heap[rightChildIndex][0] < this.heap[smallest][0]) {
+            smallest = rightChildIndex;
+        }
+        if (smallest !== index) {
+            [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+            this._heapifyDown(smallest);
+        }
+    }
+}
+;
