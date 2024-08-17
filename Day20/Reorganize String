@@ -1,0 +1,96 @@
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reorganizeString = function(s) {
+ const frequencyMap = new Map();
+    for (const char of s) {
+        frequencyMap.set(char, (frequencyMap.get(char) || 0) + 1);
+    }
+
+    // Step 2: Create a max-heap (priority queue) with characters based on their frequencies
+    const maxHeap = new MaxHeap();
+    for (const [char, freq] of frequencyMap) {
+        maxHeap.push([char, freq]);
+    }
+
+    let prevChar = '';
+    let prevFreq = 0;
+    let result = [];
+
+    // Step 3: Build the result string
+    while (maxHeap.size() > 0) {
+        const [char, freq] = maxHeap.pop();
+        
+        // Append the previous character if its frequency is greater than 0
+        if (prevFreq > 0) {
+            maxHeap.push([prevChar, prevFreq]);
+        }
+        
+        // Append the current character
+        result.push(char);
+        prevChar = char;
+        prevFreq = freq - 1;
+
+        // If the frequency of the current character becomes 0, don't push it back
+        if (prevFreq <= 0) {
+            prevChar = '';
+        }
+    }
+
+    // Join the result array into a string
+    return result.length === s.length ? result.join('') : '';
+};
+
+// Helper class to implement a max-heap
+class MaxHeap {
+    constructor() {
+        this.heap = [];
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    push(value) {
+        this.heap.push(value);
+        this._heapifyUp(this.size() - 1);
+    }
+
+    pop() {
+        if (this.size() === 0) return null;
+        const max = this.heap[0];
+        const last = this.heap.pop();
+        if (this.size() > 0) {
+            this.heap[0] = last;
+            this._heapifyDown(0);
+        }
+        return max;
+    }
+
+    _heapifyUp(index) {
+        const parentIndex = Math.floor((index - 1) / 2);
+        if (index > 0 && this.heap[index][1] > this.heap[parentIndex][1]) {
+            [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+            this._heapifyUp(parentIndex);
+        }
+    }
+
+    _heapifyDown(index) {
+        const size = this.size();
+        const leftChildIndex = 2 * index + 1;
+        const rightChildIndex = 2 * index + 2;
+        let largest = index;
+
+        if (leftChildIndex < size && this.heap[leftChildIndex][1] > this.heap[largest][1]) {
+            largest = leftChildIndex;
+        }
+        if (rightChildIndex < size && this.heap[rightChildIndex][1] > this.heap[largest][1]) {
+            largest = rightChildIndex;
+        }
+        if (largest !== index) {
+            [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+            this._heapifyDown(largest);
+        }
+    }
+};
