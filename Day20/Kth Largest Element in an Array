@@ -1,0 +1,76 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var findKthLargest = function(nums, k) {
+     class MinHeap {
+        constructor() {
+            this.heap = [];
+        }
+
+        // Method to get the size of the heap
+        size() {
+            return this.heap.length;
+        }
+
+        // Method to push a value into the heap
+        push(value) {
+            this.heap.push(value);
+            this._heapifyUp(this.size() - 1);
+        }
+
+        // Method to pop the minimum value (root) from the heap
+        pop() {
+            if (this.size() === 0) return null;
+            const min = this.heap[0];
+            const last = this.heap.pop();
+            if (this.size() > 0) {
+                this.heap[0] = last;
+                this._heapifyDown(0);
+            }
+            return min;
+        }
+
+        // Heapify up to maintain heap property
+        _heapifyUp(index) {
+            const parentIndex = Math.floor((index - 1) / 2);
+            if (index > 0 && this.heap[index] < this.heap[parentIndex]) {
+                [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+                this._heapifyUp(parentIndex);
+            }
+        }
+
+        // Heapify down to maintain heap property
+        _heapifyDown(index) {
+            const size = this.size();
+            const leftChildIndex = 2 * index + 1;
+            const rightChildIndex = 2 * index + 2;
+            let smallest = index;
+
+            if (leftChildIndex < size && this.heap[leftChildIndex] < this.heap[smallest]) {
+                smallest = leftChildIndex;
+            }
+            if (rightChildIndex < size && this.heap[rightChildIndex] < this.heap[smallest]) {
+                smallest = rightChildIndex;
+            }
+            if (smallest !== index) {
+                [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+                this._heapifyDown(smallest);
+            }
+        }
+    }
+
+    // Create a Min-Heap to keep track of the top k elements
+    const minHeap = new MinHeap();
+
+    for (const num of nums) {
+        minHeap.push(num);
+        if (minHeap.size() > k) {
+            minHeap.pop();
+        }
+    }
+
+    // The root of the heap is the k-th largest element
+    return minHeap.pop();
+};
