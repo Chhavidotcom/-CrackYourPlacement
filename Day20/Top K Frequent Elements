@@ -1,0 +1,86 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequent = function(nums, k) {
+    // Step 1: Count the frequency of each number
+    const frequencyMap = new Map();
+    for (const num of nums) {
+        frequencyMap.set(num, (frequencyMap.get(num) || 0) + 1);
+    }
+
+    // Step 2: Use a min-heap to keep track of the top k elements
+    const minHeap = new MinHeap((a, b) => a[1] - b[1]); // Create a min-heap with custom comparator
+
+    for (const [num, freq] of frequencyMap.entries()) {
+        minHeap.push([num, freq]);
+        if (minHeap.size() > k) {
+            minHeap.pop(); // Remove the element with the smallest frequency
+        }
+    }
+
+    // Step 3: Extract the elements from the heap
+    const result = [];
+    while (minHeap.size() > 0) {
+        result.push(minHeap.pop()[0]);
+    }
+    return result;
+};
+
+// Helper class to implement a min-heap
+class MinHeap {
+    constructor(compare) {
+        this.heap = [];
+        this.compare = compare;
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    push(value) {
+        this.heap.push(value);
+        this._heapifyUp(this.heap.length - 1);
+    }
+
+    pop() {
+        if (this.size() === 0) return null;
+        const root = this.heap[0];
+        const last = this.heap.pop();
+        if (this.size() > 0) {
+            this.heap[0] = last;
+            this._heapifyDown(0);
+        }
+        return root;
+    }
+
+    _heapifyUp(index) {
+        let parentIndex = Math.floor((index - 1) / 2);
+        while (index > 0 && this.compare(this.heap[index], this.heap[parentIndex]) < 0) {
+            [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+            index = parentIndex;
+            parentIndex = Math.floor((index - 1) / 2);
+        }
+    }
+
+    _heapifyDown(index) {
+        const size = this.size();
+        let leftChildIndex = 2 * index + 1;
+        let rightChildIndex = 2 * index + 2;
+        let smallest = index;
+
+        if (leftChildIndex < size && this.compare(this.heap[leftChildIndex], this.heap[smallest]) < 0) {
+            smallest = leftChildIndex;
+        }
+
+        if (rightChildIndex < size && this.compare(this.heap[rightChildIndex], this.heap[smallest]) < 0) {
+            smallest = rightChildIndex;
+        }
+
+        if (smallest !== index) {
+            [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+            this._heapifyDown(smallest);
+        }
+    }
+}
