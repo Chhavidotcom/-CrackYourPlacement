@@ -1,0 +1,84 @@
+/**
+ * @param {number[]} heights
+ * @param {number} bricks
+ * @param {number} ladders
+ * @return {number}
+ */
+var furthestBuilding = function(heights, bricks, ladders) {
+    const minHeap = new MinHeap();
+    
+    for (let i = 0; i < heights.length - 1; i++) {
+        const diff = heights[i + 1] - heights[i];
+        if (diff > 0) {
+            // If the next building is taller, we need to use resources
+            minHeap.push(diff);
+            
+            // If we have more height differences than ladders, use bricks
+            if (minHeap.size() > ladders) {
+                const smallestDiff = minHeap.pop();
+                bricks -= smallestDiff;
+            }
+            
+            // If we run out of bricks, return the last valid building index
+            if (bricks < 0) {
+                return i;
+            }
+        }
+    }
+    
+    // If we successfully navigate all buildings, return the last building index
+    return heights.length - 1;
+};
+
+// Helper class to implement a min-heap
+class MinHeap {
+    constructor() {
+        this.heap = [];
+    }
+
+    size() {
+        return this.heap.length;
+    }
+
+    push(value) {
+        this.heap.push(value);
+        this._heapifyUp(this.size() - 1);
+    }
+
+    pop() {
+        if (this.size() === 0) return null;
+        const min = this.heap[0];
+        const last = this.heap.pop();
+        if (this.size() > 0) {
+            this.heap[0] = last;
+            this._heapifyDown(0);
+        }
+        return min;
+    }
+
+    _heapifyUp(index) {
+        const parentIndex = Math.floor((index - 1) / 2);
+        if (index > 0 && this.heap[index] < this.heap[parentIndex]) {
+            [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+            this._heapifyUp(parentIndex);
+        }
+    }
+
+    _heapifyDown(index) {
+        const size = this.size();
+        const leftChildIndex = 2 * index + 1;
+        const rightChildIndex = 2 * index + 2;
+        let smallest = index;
+
+        if (leftChildIndex < size && this.heap[leftChildIndex] < this.heap[smallest]) {
+            smallest = leftChildIndex;
+        }
+        if (rightChildIndex < size && this.heap[rightChildIndex] < this.heap[smallest]) {
+            smallest = rightChildIndex;
+        }
+        if (smallest !== index) {
+            [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+            this._heapifyDown(smallest);
+        }
+    }
+};
