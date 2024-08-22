@@ -1,0 +1,27 @@
+/**
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+var eraseOverlapIntervals = function(intervals) {
+    if (intervals.length === 0) return 0;
+    
+    // Step 1: Sort intervals by their end time
+    intervals.sort((a, b) => a[1] - b[1]);
+    
+    // Step 2: Use a greedy approach to find the maximum number of non-overlapping intervals
+    let nonOverlapCount = 0;
+    let lastEnd = -Infinity; // Initialize to a very small value
+    
+    for (const [start, end] of intervals) {
+        if (start >= lastEnd) {
+            // No overlap, update the end time of the last added interval
+            nonOverlapCount++;
+            lastEnd = end;
+        }
+        // If there's an overlap, we simply continue without updating lastEnd
+        // We are counting non-overlapping intervals, so overlaps are implicitly counted
+    }
+    
+    // The number of intervals to remove is the total number of intervals minus the count of non-overlapping intervals
+    return intervals.length - nonOverlapCount;
+};
