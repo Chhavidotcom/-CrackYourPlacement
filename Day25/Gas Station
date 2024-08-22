@@ -1,0 +1,27 @@
+/**
+ * @param {number[]} gas
+ * @param {number[]} cost
+ * @return {number}
+ */
+var canCompleteCircuit = function(gas, cost) {
+      let totalGas = 0, totalCost = 0, currentGas = 0, startIndex = 0;
+    
+    for (let i = 0; i < gas.length; i++) {
+        totalGas += gas[i];
+        totalCost += cost[i];
+        currentGas += gas[i] - cost[i];
+        
+        // If current gas goes negative, this starting point is not feasible
+        if (currentGas < 0) {
+            startIndex = i + 1; // Move to the next station
+            currentGas = 0; // Reset current gas balance
+        }
+    }
+    
+    // Check if overall gas is enough to cover the overall cost
+    if (totalGas >= totalCost) {
+        return startIndex;
+    } else {
+        return -1;
+    }
+};
