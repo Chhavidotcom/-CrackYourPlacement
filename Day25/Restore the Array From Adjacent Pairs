@@ -1,0 +1,44 @@
+/**
+ * @param {number[][]} adjacentPairs
+ * @return {number[]}
+ */
+var restoreArray = function(adjacentPairs) {
+     const graph = new Map();
+    
+    for (const [u, v] of adjacentPairs) {
+        if (!graph.has(u)) graph.set(u, []);
+        if (!graph.has(v)) graph.set(v, []);
+        graph.get(u).push(v);
+        graph.get(v).push(u);
+    }
+    
+    // Step 2: Find the endpoint
+    let startNode = null;
+    for (const [node, neighbors] of graph) {
+        if (neighbors.length === 1) {
+            startNode = node;
+            break;
+        }
+    }
+    
+    // Step 3: Traverse the graph using BFS
+    const result = [];
+    const visited = new Set();
+    const queue = [startNode];
+    
+    while (queue.length) {
+        const node = queue.shift();
+        if (visited.has(node)) continue;
+        visited.add(node);
+        result.push(node);
+        
+        for (const neighbor of graph.get(node)) {
+            if (!visited.has(neighbor)) {
+                queue.push(neighbor);
+            }
+        }
+    }
+    
+    return result;
+
+};
