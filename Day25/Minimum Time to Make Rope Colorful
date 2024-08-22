@@ -1,0 +1,23 @@
+/**
+ * @param {string} colors
+ * @param {number[]} neededTime
+ * @return {number}
+ */
+var minCost = function(colors, neededTime) {
+    let totalCost = 0;
+    
+    // Traverse through the colors string
+    for (let i = 0; i < colors.length - 1; i++) {
+        if (colors[i] === colors[i + 1]) {
+            // If two consecutive balloons have the same color
+            // Add the minimum removal time to totalCost
+            totalCost += Math.min(neededTime[i], neededTime[i + 1]);
+            
+            // Optionally, update neededTime[i + 1] to be the max of the two
+            // so that we keep the balloon with the maximum removal time
+            neededTime[i + 1] = Math.max(neededTime[i], neededTime[i + 1]);
+        }
+    }
+    
+    return totalCost;
+};
