@@ -1,0 +1,26 @@
+/**
+ * @param {character[]} tasks
+ * @param {number} n
+ * @return {number}
+ */
+var leastInterval = function(tasks, n) {
+    const taskCount = new Map();
+    for (const task of tasks) {
+        taskCount.set(task, (taskCount.get(task) || 0) + 1);
+    }
+
+    // Step 2: Find the maximum frequency
+    const maxFrequency = Math.max(...taskCount.values());
+
+    // Step 3: Count how many tasks have the maximum frequency
+    let maxFrequencyCount = 0;
+    for (const count of taskCount.values()) {
+        if (count === maxFrequency) {
+            maxFrequencyCount++;
+        }
+    }
+
+    // Step 4: Calculate the minimum intervals required
+    const intervals = (maxFrequency - 1) * (n + 1) + maxFrequencyCount;
+    return Math.max(intervals, tasks.length);
+};
