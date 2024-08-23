@@ -1,0 +1,51 @@
+/**
+ * @param {number} n
+ * @param {number[][]} edges
+ * @param {number} distanceThreshold
+ * @return {number}
+ */
+var findTheCity = function(n, edges, distanceThreshold) {
+     let dist = Array.from({ length: n }, () => Array(n).fill(Infinity));
+    
+    // Distance to itself is zero
+    for (let i = 0; i < n; i++) {
+        dist[i][i] = 0;
+    }
+    
+    // Fill the distance matrix with given edge weights
+    for (let [from, to, weight] of edges) {
+        dist[from][to] = weight;
+        dist[to][from] = weight; // Since the graph is undirected
+    }
+    
+    // Floyd-Warshall Algorithm to find shortest paths between all pairs
+    for (let k = 0; k < n; k++) {
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+    
+    // Find the city with the smallest number of reachable cities within the distance threshold
+    let minReachableCities = Infinity;
+    let cityWithMinReachableCities = -1;
+    
+    for (let i = 0; i < n; i++) {
+        let reachableCities = 0;
+        for (let j = 0; j < n; j++) {
+            if (dist[i][j] <= distanceThreshold) {
+                reachableCities++;
+            }
+        }
+        // Update the result city based on the count of reachable cities
+        if (reachableCities <= minReachableCities) {
+            minReachableCities = reachableCities;
+            cityWithMinReachableCities = i;
+        }
+    }
+    
+    return cityWithMinReachableCities;
+};
