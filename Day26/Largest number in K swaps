@@ -1,0 +1,29 @@
+let maxNum = str; // Initialize maxNum with the initial string
+        
+        function backtrack(currentStr, remainingK, index) {
+            if (remainingK === 0) return;
+
+            let currentMax = currentStr;
+            
+            for (let i = index; i < currentStr.length; i++) {
+                for (let j = i + 1; j < currentStr.length; j++) {
+                    if (currentStr[i] < currentStr[j]) {
+                        // Swap i and j
+                        let swappedStrArray = currentStr.split('');
+                        [swappedStrArray[i], swappedStrArray[j]] = [swappedStrArray[j], swappedStrArray[i]];
+                        let swappedStr = swappedStrArray.join('');
+                        
+                        // Update maxNum if we found a larger number
+                        if (swappedStr > maxNum) {
+                            maxNum = swappedStr;
+                        }
+                        
+                        // Recur with one less swap
+                        backtrack(swappedStr, remainingK - 1, i + 1);
+                    }
+                }
+            }
+        }
+        
+        backtrack(str, k, 0);
+        return maxNum;
