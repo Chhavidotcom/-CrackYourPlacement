@@ -1,0 +1,57 @@
+/**
+ * @param {number[][]} stones
+ * @return {number}
+ */
+var removeStones = function(stones) {
+function dfs(node, graph, visited) {
+        let stack = [node];
+        while (stack.length > 0) {
+            let current = stack.pop();
+            if (visited[current]) continue;
+            visited[current] = true;
+            for (let neighbor of graph[current]) {
+                if (!visited[neighbor]) stack.push(neighbor);
+            }
+        }
+    }
+
+    // Create a mapping from coordinates to index
+    let rowMap = new Map();
+    let colMap = new Map();
+    let n = stones.length;
+
+    // Build the graph
+    let graph = Array.from({ length: n }, () => []);
+    for (let i = 0; i < n; i++) {
+        let [row, col] = stones[i];
+        if (!rowMap.has(row)) rowMap.set(row, []);
+        if (!colMap.has(col)) colMap.set(col, []);
+        rowMap.get(row).push(i);
+        colMap.get(col).push(i);
+    }
+
+    // Create edges in the graph based on rows and columns
+    for (let i = 0; i < n; i++) {
+        let [row, col] = stones[i];
+        for (let j of rowMap.get(row)) {
+            if (i !== j) graph[i].push(j);
+        }
+        for (let j of colMap.get(col)) {
+            if (i !== j) graph[i].push(j);
+        }
+    }
+
+    // Count the number of connected components
+    let visited = Array(n).fill(false);
+    let numComponents = 0;
+
+    for (let i = 0; i < n; i++) {
+        if (!visited[i]) {
+            dfs(i, graph, visited);
+            numComponents++;
+        }
+    }
+
+    // Maximum number of stones that can be removed
+    return n - numComponents;
+};
